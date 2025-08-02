@@ -12,16 +12,31 @@ API_KEY =  os.getenv('GEMINI_API_KEY')
 ENDPOINT = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={API_KEY}"
 
 TEMPLATE = """
+Eres un asistente de diagnóstico ergonómico. Recibirás datos ambientales estructurados en el siguiente formato:
+
 Temperatura: {temperature}°C
 Humedad relativa: {humidity}%
+Sonido: {sound_level} dB
+Iluminación: {light_level} lux
+Vibración: {vibration_level} m/s²
 
-Genera una melodía breve en formato "nota,duración,nota,duración,...", usando notas musicales estándar (C3 a C6 y R para silencios). Ideal para expresar el estado ambiental de una planta.
+Tu tarea:
+1. Evalúa si el entorno es adecuado para una sesión de trabajo de alta concentración.
+2. Da un veredicto claro: “Entorno Adecuado” o “Entorno No Adecuado”.
+3. Explica brevemente (1-2 oraciones) cuáles parámetros influyeron más en tu decisión.
+4. Propón al menos **tres** recomendaciones prácticas y accionables para mejorar la ergonomía y el confort.
+5. Responde en español, de manera concisa y directa.
+
+Por ejemplo:
+- “Entorno Adecuado. La temperatura y humedad están dentro del rango óptimo…”
+- “Recomendaciones: 1) Bajar el nivel de ruido usando auriculares con cancelación…”
+
 """
 
 class ContextData(BaseModel):
-    location: str
-    plant_type: str
-    soil_moisture: float
+    sound_level: float
+    light_level: float
+    vibration_level: float
     temperature: float
     humidity: float
 
