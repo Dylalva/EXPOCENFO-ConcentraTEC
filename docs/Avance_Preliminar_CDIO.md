@@ -159,14 +159,22 @@ flowchart TB
 
 ## 6. Plan de Trabajo
 
-| Hito                                 | Fecha Estimada |
-| ------------------------------------ | -------------- |
-| Recopilación de requisitos           | 15 ago 2025    |
-| Prototipo HW con ESP32 y sensores    | 30 sept 2025   |
-| Integración MCP + LLM Gemini         | 15 oct 2025    |
-| Desarrollo de app móvil (v1.0)       | 30 nov 2025    |
-| Pruebas piloto con usuarios beta     | 15 dic 2025    |
-| Ajustes finales y entrega de informe | 15 ene 2026    |
+**Período: 15 de julio – 20 de agosto**
+
+| Rango de Fechas       | Hito / Fase                                      | Actividades Clave                                                                 |
+|-----------------------|--------------------------------------------------|-----------------------------------------------------------------------------------|
+| **15 - 17 de julio**  | Inicio y planificación general                   | Definición de objetivos, tecnologías, asignación de roles, boceto de arquitectura. |
+| **18 - 25 de julio**  | Diseño del sistema y estructura del repo         | Crear estructura `/docs`, `/software`, `/hardware`, empezar `README.md`.         |
+| **26 jul - 1 ago**    | Desarrollo inicial y documentación base          | Captura de datos básica, subida de código base, bosquejo `ARCHITECTURE.md`.       |
+| **2 de agosto**       | Preparación de entrega inicial                   | Validar estructura del repo, añadir primeros archivos a GitHub.                  |
+| **📍 3 de agosto**     | Entrega del avance por GitHub                    | Entrega formal: incluir avances reales, estructura organizada, documentación mínima. |
+| **4 - 8 de agosto**   | Mejoras técnicas y primeras pruebas              | Probar sensores, refinar software, inicio de `/tests/`, completar `SETUP.md`.     |
+| **9 - 13 de agosto**  | Ejemplos y depuración                            | Subir ejemplos funcionales a `/examples/`, limpiar código, comenzar `CONTRIBUTING.md`. |
+| **📍 14 de agosto**    | Envío del QR del GitHub                          | Confirmar repositorio operativo, revisado y con todo enlazado.                   |
+| **15 - 18 de agosto** | Optimización final y revisión general            | Ejecutar pruebas finales, afinar entregables, subir `LICENSE`, preparar presentación. |
+| **📍 19 de agosto**    | Entrega final del GitHub completo                | Todo debe estar funcional, probado y documentado.                                |
+| **📍 20 de agosto**    | Olimpiadas de Computación Inteligente            | Presentación del sistema, demo funcional, justificación del diagnóstico ergonómico. |
+
 
 ### Riesgos y Mitigaciones
 
