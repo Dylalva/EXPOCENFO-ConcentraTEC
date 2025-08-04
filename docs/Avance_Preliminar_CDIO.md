@@ -193,3 +193,107 @@ flowchart TB
 ---
 
 ## 7. Prototipos Conceptuales
+
+```python
+import time
+import ujson
+import urequests
+import network
+from machine import Pin, ADC, I2C
+import ssd1306
+import dht
+from secrets import secrets
+
+# ————— Configuración Wi-Fi —————
+sta_if = network.WLAN(network.STA_IF)
+sta_if.active(True)
+sta_if.connect(secrets["ssid"], secrets["password"])
+print("Conectando a Wi-Fi...", end="")
+while not sta_if.isconnected():
+    print(".", end="")
+    time.sleep(0.5)
+print("\nConectado. IP:", sta_if.ifconfig()[0])
+
+SERVER = secrets["url_mcp"] + "/consulta"
+
+# ————— Configuración sensores —————
+# DHT22 en GPIO15
+sensor_dht = dht.DHT22(Pin(15))
+
+# LDR en GPIO33 (divisor 10 kΩ → GND)
+adc_luz = ADC(Pin(33))
+adc_luz.atten(ADC.ATTN_11DB)
+
+# Micrófono analógico en GPIO32
+adc_ruido = ADC(Pin(32))
+adc_ruido.atten(ADC.ATTN_11DB)
+
+# OLED para debug
+i2c = I2C(0, scl=Pin(22), sda=Pin(21))
+oled = ssd1306.SSD1306_I2C(128, 64, i2c)
+
+def leer_sensores():
+    # Lee temp/hum
+    try:
+        sensor_dht.measure()
+        temp = sensor_dht.temperature()
+        hum  = sensor_dht.humidity()
+    except OSError:
+        temp = None
+        hum  = None
+
+    # Lee luz y ruido
+    luz   = adc_luz.read()
+    vib = adc_ruido.read()
+
+
+    return temp, hum, luz, vib
+
+while True:
+    # 1) Leer sensores reales
+    temp, hum, luz, vib = leer_sensores()
+
+    # 2) Montar payload JSON
+    payload = {
+        "temperature":  temp,
+        "humidity":     hum,
+        "light_level":  luz,
+        "vibration_level":  vib,
+        "sound_level": vib
+    }
+    body = ujson.dumps(payload)
+
+    # 3) Enviar al servidor
+    try:
+        print("Enviando:", body)
+        resp = urequests.post(SERVER,
+                              headers={"Content-Type":"application/json"},
+                              data=body)
+        print("Status:", resp.status_code)
+        print("Respuesta:", resp.text)
+        resp.close()
+    except Exception as e:
+        print("Error al enviar:", e)
+
+    # 4) Mostrar en OLED
+    oled.fill(0)
+    oled.text("T:{:.1f}C H:{:.1f}%".format(temp or 0, hum or 0), 0, 0)
+    oled.text("Luz:{}".format(luz), 0, 10)
+    oled.text("Ruido:{}".format(vib), 0, 20)
+    oled.show()
+
+    # 5) Esperar 60 s
+    time.sleep(60)
+
+```
+
+**Ejemplo de respuesta recibida**
+```json
+Status: 200
+Respuesta: {"respuesta":"Entorno Adecuado. La iluminación se encuentra en un nivel óptimo para la concentración, 
+y los niveles de ruido y vibración son mínimos.\n\nRecomendaciones:\n\n1. Mantener la temperatura y humedad en 
+los rangos ideales para la comodidad y productividad (generalmente entre 20-24°C y 40-60% de humedad relativa).\n
+2. Asegurar una adecuada postura corporal con una silla ergonómica y una mesa de altura correcta para evitar la 
+fatiga muscular"}
+```
+
