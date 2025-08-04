@@ -30,6 +30,7 @@ def read_vibration_level():
 while True:
     # 1) Generar datos simulados
     payload = {
+        "device_id": "001",
         "temperature":     read_temperature(),
         "humidity":        read_humidity(),
         "sound_level":     read_sound_level(),
